@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stopwatch App</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Stopwatch</h1>
+    <div class="text-center">
+      <span id="display">00:00:00</span>
+    </div>
+    <div class="text-center mt-3">
+      <button id="startBtn" class="btn btn-primary">Start</button>
+      <button id="stopBtn" class="btn btn-secondary">Stop</button>
+      <button id="resetBtn" class="btn btn-danger">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    // Variables
+    let startTime;
+    let elapsedTime = 0;
+    let timerInterval;
+    let running = false;
+
+    // Format time as HH:MM:SS
+    function formatTime(time) {
+      const hours = Math.floor(time / 3600000);
+      const minutes = Math.floor((time % 3600000) / 60000);
+      const seconds = Math.floor((time % 60000) / 1000);
+
+      return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+    }
+
+    // Add leading zero to single-digit numbers
+    function padZero(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    // Update the stopwatch display
+    function updateDisplay() {
+      const display = document.getElementById('display');
+      display.textContent = formatTime(elapsedTime);
+    }
+
+    // Start the stopwatch
+    function startTimer() {
+      if (!running) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(function() {
+          elapsedTime = Date.now() - startTime;
+          updateDisplay();
+        }, 100);
+        running = true;
+      }
+    }
+
+    // Stop the stopwatch
+    function stopTimer() {
+      if (running) {
+        clearInterval(timerInterval);
+        running = false;
+      }
+    }
+
+    // Reset the stopwatch
+    function resetTimer() {
+      stopTimer();
+      elapsedTime = 0;
+      updateDisplay();
+    }
+
+    // Event listeners
+    document.getElementById('startBtn').addEventListener('click', startTimer);
+    document.getElementById('stopBtn').addEventListener('click', stopTimer);
+    document.getElementById('resetBtn').addEventListener('click', resetTimer);
+  </script>
+</body>
+</html>
